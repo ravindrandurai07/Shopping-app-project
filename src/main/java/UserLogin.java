@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.UserDao;
 
@@ -23,8 +24,10 @@ public class UserLogin extends HttpServlet {
 		
 		try {
 			
-			if (userDao != null && userDao.getPassword().equals(password)) {	
-				response.sendRedirect("home.jsp");
+			if (userDao != null && userDao.getPassword().equals(password)) {
+				HttpSession session = request.getSession();
+				session.setAttribute("user", username);
+				response.sendRedirect("./user-protected/home.jsp");
 			}
 			else {
 				request.setAttribute("errorMessage", "enter correct username and password");
