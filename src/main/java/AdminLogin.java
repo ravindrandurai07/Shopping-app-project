@@ -8,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import dao.AdminValidator;
 
 @WebServlet("/adminLogin")
@@ -30,7 +32,9 @@ public class AdminLogin extends HttpServlet {
 		
 		if (dao.AdminValidator.validateAdmin(request, id, password)) {
 			try {
-				response.sendRedirect("admin-home.jsp");
+				HttpSession session = request.getSession();
+				session.setAttribute("admin", id);
+				response.sendRedirect("./admin-protected/admin-home.jsp");
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 				e.printStackTrace();
