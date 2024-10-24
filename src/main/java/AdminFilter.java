@@ -26,6 +26,6 @@ public class AdminFilter extends HttpFilter implements Filter {
 		if (session != null && (session.getAttribute("admin") != null))
 			chain.doFilter(request, response);
 		else
-			res.sendRedirect("index.html");
+			res.sendRedirect(req.getContextPath() + "index.html");
 	}
 }

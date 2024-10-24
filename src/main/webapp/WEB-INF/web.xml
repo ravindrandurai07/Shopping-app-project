@@ -6,7 +6,9 @@
     <extension>css</extension>
     <mime-type>text/css</mime-type>
   </mime-mapping>
-  
+  <session-config>
+    <session-timeout>30</session-timeout> <!-- 30 minutes -->
+</session-config>
   
   <filter>
     <filter-name>AuthenticationFilter</filter-name>

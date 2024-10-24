@@ -21,11 +21,16 @@ public class LoginFilter extends HttpFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		
+		// Disable caching
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+        res.setHeader("Pragma", "no-cache"); // HTTP 1.0
+        res.setDateHeader("Expires", 0); // Proxies
+		
 		HttpSession session = req.getSession(false);
 		
 		if (session != null && (session.getAttribute("user") != null))
 			chain.doFilter(request, response);
 		else
-			res.sendRedirect("index.html");
+			res.sendRedirect(req.getContextPath() + "/index.html");
 	}
 }
