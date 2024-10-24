@@ -6,8 +6,104 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDao {
+	
+	public static void removeProduct (int id) {
+		
+		Connection con = DbConnection.getDbConnection();
+		
+		String sql = "DELETE FROM products WHERE prod_id=?";
+		
+		try (PreparedStatement pst = con.prepareStatement(sql)) {
+			pst.setInt(1, id);
+			pst.executeUpdate();
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	
+	public static List<Product> getProducts (String category) {
+		
+		
+		int cat_id = getCategoryName(category);
+		Connection con = DbConnection.getDbConnection();
+		String sql;
+		if (category.equals("all"))
+			sql = "SELECT * FROM products";
+		else
+			sql = "SELECT * FROM products WHERE prod_category_id=" + cat_id;
+		
+		List<Product> products = new ArrayList<>();
+		
+		try (Statement st = con.createStatement();
+				ResultSet rs = st.executeQuery(sql)) {
+			
+			while (rs.next()) {
+				Product product = new Product(
+						rs.getInt(1),
+						rs.getString(2),
+						rs.getDouble(3),
+						rs.getInt(4),
+						rs.getString(5),
+						getCategoryId(rs.getInt(6)),
+						rs.getString(7)
+						);
+				products.add(product);
+			}
+			System.out.println("inside prod");
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+		return products;
+	}
+	
+	private static String getCategoryId (int id) {
+		Connection con = DbConnection.getDbConnection();
+		String sql = "SELECT category_name FROM categories WHERE id = ?";
+		
+		try (PreparedStatement pst = con.prepareStatement(sql)) {
+			pst.setInt(1, id);
+			try (ResultSet rs = pst.executeQuery()) {
+				rs.next();
+				String cat = rs.getString(1);
+				return cat;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	private static int getCategoryName (String name) {
+		Connection con = DbConnection.getDbConnection();
+		String sql = "SELECT id FROM categories WHERE category_name = ?";
+		
+		try (PreparedStatement pst = con.prepareStatement(sql)) {
+			pst.setString(1, name);
+			try (ResultSet rs = pst.executeQuery()) {
+				rs.next();
+				int id = rs.getInt(1);
+				return id;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		return -1;
+	}
+	
+	
 	
 	public static boolean addProduct (String name, int qty, double price, 
 										String category, String desc, String url) {

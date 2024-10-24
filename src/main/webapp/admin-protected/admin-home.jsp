@@ -12,7 +12,7 @@
         <h1>Admin Dashboard</h1>
         <nav>
             <ul>
-                <li><a href="logout.jsp">Logout</a></li>
+                <li><a href="admin-logout">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -20,16 +20,8 @@
         <section class="dashboard-options">
             <h2>Manage Products</h2>
             <ul>
-                <li><a href="viewProducts.jsp">View All Products</a></li>
+                <li><a href="products?category=all">View All Products</a></li>
                 <li><a href="addProduct.jsp">Add New Product</a></li>
-                <li><a href="removeProduct.jsp">Remove Product</a></li>
-            </ul>
-        </section>
-
-        <section class="dashboard-options">
-            <h2>Manage Customers</h2>
-            <ul>
-                <li><a href="viewCustomers.jsp">View All Customers</a></li>
             </ul>
         </section>
 
