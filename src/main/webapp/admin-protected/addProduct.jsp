@@ -82,7 +82,7 @@
 	
 		<label for="qty">Quantity:</label>
         <input type="number" id="qty" name="qty" required>
-		
+	
         <label for="price">Price:</label>
         <input type="number" id="price" name="price" step="0.01" required>
 

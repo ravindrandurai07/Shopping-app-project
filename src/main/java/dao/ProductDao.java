@@ -11,6 +11,47 @@ import java.util.List;
 
 public class ProductDao {
 	
+	public static Product getProductById(int id) {
+		
+		
+		Connection con = DbConnection.getDbConnection();
+		String sql = "SELECT * FROM products WHERE prod_id=" + id;
+		
+		try (PreparedStatement pst = con.prepareStatement(sql)) {
+			pst.setInt(1, id);
+			
+			try (ResultSet rs = pst.executeQuery()) {
+				if (rs.next()) {
+					Product product = new Product(
+							rs.getInt(1),
+							rs.getString(2),
+							rs.getDouble(3),
+							rs.getInt(4),
+							rs.getString(5),
+							getCategoryId(rs.getInt(6)),
+							rs.getString(7)
+							);
+					return product;
+				}
+			}
+			return null;
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+    			System.out.println(e.getMessage());
+
+                e.printStackTrace();
+            }
+        }
+		
+	}
+	
 	public static void removeProduct (int id) {
 		
 		Connection con = DbConnection.getDbConnection();
@@ -166,4 +207,54 @@ public class ProductDao {
 		
 		return true;
 	}
+
+	public static void updateProduct(int id, String name, double price, int qty, String desc) {
+		// TODO Auto-generated method stub
+		
+		String sql = "UPDATE products SET prod_name = ?, prod_price = ?, prod_qty = ?, prod_desc = ? WHERE prod_id = ?;";
+		Connection con = DbConnection.getDbConnection();
+		
+		try (PreparedStatement pst = con.prepareStatement(sql)){
+			pst.setString(1, name);
+			pst.setDouble(2, price);
+			pst.setInt(3, qty);
+			pst.setString(4, desc);
+			pst.setInt(5, id);
+			int r = pst.executeUpdate();
+			System.out.println(r);
+		}
+		catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		}
+		finally {
+			try {
+				assert con != null;
+				con.close();
+			}
+			catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

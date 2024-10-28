@@ -67,7 +67,7 @@ public class AddProductServlet extends HttpServlet {
 					outputStream.write(buffer, 0, bytesRead);
 				}
  			}
-			request.setAttribute("message", "Image uploaded successfully to: " + uploadPath + "/" + fileName);
+			request.setAttribute("message", "Image uploaded successfully");
 		}
 		catch (IOException e) {
 			System.out.println(e.getLocalizedMessage());
