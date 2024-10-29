@@ -13,9 +13,8 @@ public class ProductDao {
 	
 	public static Product getProductById(int id) {
 		
-		
 		Connection con = DbConnection.getDbConnection();
-		String sql = "SELECT * FROM products WHERE prod_id=" + id;
+		String sql = "SELECT * FROM products WHERE prod_id=?";
 		
 		try (PreparedStatement pst = con.prepareStatement(sql)) {
 			pst.setInt(1, id);

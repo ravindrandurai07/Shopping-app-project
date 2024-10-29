@@ -27,10 +27,10 @@ public class UserLogin extends HttpServlet {
 			if (userDao != null && userDao.getPassword().equals(password)) {
 				HttpSession session = request.getSession();
 				session.setAttribute("user", username);
-				response.sendRedirect("./user-protected/home.jsp");
+				response.sendRedirect("./user-protected/products?category=all");
 			}
 			else {
-				request.setAttribute("errorMessage", "enter correct username and password");
+				request.setAttribute("errorMessage", "enter valid username and password");
 				RequestDispatcher rd = request.getRequestDispatcher("user-login.jsp");
 				rd.forward(request, response);
 			}

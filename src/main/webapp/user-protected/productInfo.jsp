@@ -1,28 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
-<%@ page import="dao.Product, dao.ProductDao" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="dao.Product, dao.ProductDao, java.util.List, java.util.ArrayList"%>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+<meta charset="UTF-8">
+<title>Product Page</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f8f8;
+    }
 
-    <style>
-        /* General Styling */
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            font-family: 'Arial', sans-serif;
-            color: #2c2c2c;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        a {
+    a {
             text-decoration: none;
             color: #2c2c2c;
             transition: color 0.3s ease, opacity 0.3s ease;
@@ -108,42 +99,80 @@
             opacity: 0.6;
         }
 
-        main {
-            flex: 1;
-            padding: 20px 40px;
-        }
 
-        h1 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
+    main {
+        justify-content: center;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-        /* Category Menu */
-        .category-menu {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-        }
+    .container {
+        display: flex;
+        gap: 20px;
+        width: 100%;
+    }
 
-        .category-menu a {
-            margin: 0 8px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s, transform 0.2s ease-in-out;
-        }
+    .left img {
+        max-width: 300px;
+        height: auto;
+        border-radius: 8px;
+    }
 
-        .category-menu a:hover {
-            background-color: #bfbfbf;
-            transform: scale(1.05);
-        }
+    .right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
 
-        /* Product Grid */
+    .prod-info h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .buy-info {
+        margin-top: 20px;
+    }
+
+    .buy-info h3 {
+        font-size: 22px;
+        color: black; /* Changed color to black */
+    }
+
+    .buy-info input[type="number"] {
+        width: 50px;
+        margin-right: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .buy-info a {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+
+    .buy-info a:hover {
+        background-color: #218838;
+    }
+
+
 		.product-grid {
 		    display: grid;
 		    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 		    gap: 20px;
 		}
+		
+    .iii {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
 		
 		/* Product Item */
 		.product-item {
@@ -182,33 +211,26 @@
 		    color: #666;
 		}
 
-        footer {
-            background-color: #e0e0e0;
-            padding: 20px;
-            text-align: center;
-        }
 
-        footer a {
-            margin-right: 15px;
-            font-size: 1rem;
-        }
+    footer {
+        background-color: grey;
+        padding: 20px;
+        text-align: center;
+        margin-top: 40px;
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        footer h1 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
+    footer a {
+        text-decoration: none;
+        color: white;
+    }
 
-        footer ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        footer li {
-            margin-bottom: 5px;
-        }
-    </style>
+    footer h1 {
+        margin: 10px 0;
+        font-size: 20px;
+    }
+</style>
 </head>
-
 <body>
     <header>
         <div id="brandName">
@@ -229,33 +251,49 @@
         </ul>
     </header>
 
-    <main>
-        <div class="category-menu">
-            <a href="products?category=all">All Products</a> |
-            <a href="products?category=Shirt">Shirts</a> |
-            <a href="products?category=T-shirt">T-Shirts</a> |
-            <a href="products?category=jean">Jean</a> |
-            <a href="products?category=Cotton pants">Cotton pants</a> |
-            <a href="products?category=Shorts">Shorts</a> |
-            <a href="products?category=Over-sized T-Shirt">Over-sized T-Shirt</a> |
-            <a href="products?category=Track pants">Track pants</a> |
-            <a href="products?category=Sweat shirts">Sweat shirts</a>
-        </div>
+    <%! 
+        private Product product = null;
+    %>
 
+    <%
+        product = (Product)request.getAttribute("product");
+    %>
+    
+    <main>
+        <div class="container">
+            <div class="left">
+                <img alt="<%=product.getName() %>" src="<%=product.getUrl()%>">
+            </div>
+            <div class="right">
+                <div class="prod-info">
+                    <h1><%=product.getName()%></h1>
+                    <p><%=product.getDesc()%></p>
+                </div>
+                <div class="buy-info">
+                    <h3>Price: ₹<%=product.getPrice() %></h3> <!-- Color changed to black -->
+                    <input type="number" min="1" value="1">
+                    <a href="addToCart?productId=<%=product.getId() %>">Add To Cart</a>
+                    <a href="buyNow?productId=<%=product.getId() %>">Buy Now</a>
+                </div>
+            </div>
+        </div>
+        <!-- Moved the "You may also like" section down -->
+                    <h1 class="iii">You may also like</h1>
         <div class="product-grid">
             <%
-                List<Product> productList = (List<Product>) request.getAttribute("productList");
+                List<Product> productList = ProductDao.getProducts(product.getCategory());
                 if (productList != null && !productList.isEmpty()) {
-                    for (Product product : productList) {
+                    for (Product prod : productList) {
+                        if (prod.getId() == product.getId()) continue;
             %>	
-            	<a href="displayProduct?productId=<%=product.getId()%>">
-            	<div class="product-item">
-                    <img src="<%= product.getUrl() %>" alt="<%= product.getName() %>" />
-                    <h2><%= product.getName() %></h2>
-                    <p>Price: ₹<%= product.getPrice() %></p>                    
-                    <p><%= product.getDesc() %></p>
+                <a href="displayProduct?productId=<%=prod.getId()%>">
+                <div class="product-item">
+                    <img src="<%= prod.getUrl() %>" alt="<%= prod.getName() %>" />
+                    <h2><%= prod.getName() %></h2>
+                    <p>Price: ₹<%= prod.getPrice() %></p>  
+                    <p><%= prod.getDesc() %></p>            
                 </div>
-            	</a>
+                </a>
             <%
                     }
                 } else {
@@ -266,10 +304,8 @@
             %>
         </div>
     </main>
-
     <footer>
         <a href="#">About us</a>
-
         <div>
             <h1>Contacts</h1>
             <ul>
@@ -279,7 +315,4 @@
         </div>
     </footer>
 </body>
-
 </html>
-
-
